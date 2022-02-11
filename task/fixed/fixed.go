@@ -3,20 +3,76 @@ package fixed
 import (
   "context"
   "encoding/json"
+  "fmt"
   "github.com/robfig/cron/v3"
+  "github.com/xpwu/go-log/log"
   "github.com/xpwu/timer/scheduler"
+  "github.com/xpwu/timer/task"
   "time"
 )
 
 type Fixed struct {
-  IsTry     bool                     `json:"try"`
+  TryCount  uint16                   `json:"try"`
   Id        string                   `json:"id"`
   TimePoint scheduler.UnixTimeSecond `json:"tp"`
   OpFlag    string                   `json:"op"`
 }
 
-func (f *Fixed) Run(ctx context.Context, schedulerTime scheduler.UnixTimeSecond) {
+type callback struct {
+  TimePoint scheduler.UnixTimeSecond `json:"time_point"`
+  Id        string                   `json:"id"`
+}
 
+func (f *Fixed) Run(ctx context.Context, schedulerTime scheduler.UnixTimeSecond) {
+  ctx, logger := log.WithCtx(ctx)
+  logger.PushPrefix(fmt.Sprintf("run fixed. id=%s, timepoint=%d", f.Id, f.TimePoint))
+
+  cronTimeB, opF, ok := db.Get(f.Id)
+  // 已经删除或者OpFlag不相同的task都不真正的执行
+  if !ok || opF != f.OpFlag {
+    return
+  }
+
+  // 只有非重试的情况下，才添加下一次的scheduler
+  if f.TryCount == 0 {
+    cronTime := NewCronTimeFromBytes(cronTimeB)
+    // 增加一个小的偏移，以防端点处的bug
+    next := scheduler.UnixTimeSecond(cronTime.Next(time.Unix(int64(f.TimePoint), 1000)).Unix())
+    fixed := &Fixed{
+      TryCount:  0,
+      Id:        f.Id,
+      TimePoint: next,
+      OpFlag:    f.OpFlag,
+    }
+    tk := task.NewFixedTask(fixed)
+    scheduler.AddTask(next, []scheduler.Task{tk})
+  }
+
+  req := &callback{
+    TimePoint: f.TimePoint,
+    Id:        f.Id,
+  }
+
+  ok = task.Callback(ctx, confValue.CallbackUrl, req)
+  if ok {
+    return
+  }
+
+  // retry, 超过最大重试时间，直接放弃
+  if int(f.TryCount) >= len(task.ReTryDuration)-1 {
+    return
+  }
+
+  tc := f.TryCount + 1
+  // 从当前时间计算下次重试的时间
+  next := scheduler.UnixTimeSecond(time.Now().Unix()) + task.ReTryDuration[tc]
+  newF := &Fixed{
+    TryCount:  tc,
+    Id:        f.Id,
+    TimePoint: f.TimePoint,
+    OpFlag:    f.OpFlag,
+  }
+  scheduler.AddTask(next, []scheduler.Task{task.NewFixedTask(newF)})
 }
 
 func (f *Fixed) ToBytes() []byte {

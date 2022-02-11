@@ -45,7 +45,7 @@ func Add(ctx context.Context, id string, cronTimeStr string, start scheduler.Uni
   ctx, logger := log.WithCtx(ctx)
   logger.PushPrefix("fixed add")
 
-  sche,err := cron.ParseStandard(cronTimeStr)
+  sche, err := cron.ParseStandard(cronTimeStr)
   if err != nil {
     logger.Error(err)
     return DataErr
@@ -60,7 +60,7 @@ func Add(ctx context.Context, id string, cronTimeStr string, start scheduler.Uni
   opFlag := reqid.RandomID()
   next := scheduler.UnixTimeSecond(cronTime.Next(time.Unix(int64(start), 0)).Unix())
   fixed := &Fixed{
-    IsTry:     false,
+    TryCount:  0,
     Id:        id,
     TimePoint: next,
     OpFlag:    opFlag,
