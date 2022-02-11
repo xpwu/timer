@@ -16,8 +16,10 @@ import (
 
 func main() {
   cmd.RegisterCmd(cmd.DefaultCmdName, "start server", func(args *arg.Arg) {
-    config := "default.json"
+    config := "config.json"
     args.String(&config, "c", "config file path")
+    args.Parse()
+
     if !filepath.IsAbs(config) {
       config = filepath.Join(exe.Exe.AbsDir, config)
     }
