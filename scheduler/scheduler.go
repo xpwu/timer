@@ -50,20 +50,6 @@ func start(ctx context.Context, down chan<- struct{}) {
     }
     cancel()
 
-    // 等待所有的running退出
-    //go func() {
-    //  for {
-    //    select {
-    //    case id := <-over:
-    //      delete(running, id)
-    //    case <-time.After(1*time.Second):
-    //      if len(running) == 0 {
-    //        return
-    //      }
-    //    }
-    //  }
-    //}()
-
     down <- struct{}{}
   }()
 
@@ -163,7 +149,7 @@ func start(ctx context.Context, down chan<- struct{}) {
           if overData.crashed {
             logger.Error("task(unixts=", overData.ts, ") runner crashed!")
             // 延迟5s再试
-            AddTask(overData.ts+5, overData.tasks)
+            AddTask(UnixTimeSecond(time.Now().Unix() + 5), overData.tasks)
           }
 
           select {
