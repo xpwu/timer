@@ -6,7 +6,8 @@ import (
   "fmt"
   "github.com/xpwu/go-log/log"
   "github.com/xpwu/timer/scheduler"
-  "github.com/xpwu/timer/task"
+  "github.com/xpwu/timer/task/callback"
+  "github.com/xpwu/timer/task/flag"
   "time"
 )
 
@@ -16,39 +17,38 @@ type Delay struct {
   TimePoint scheduler.UnixTimeSecond `json:"tp"`
 }
 
-type callback struct {
-  TimePoint scheduler.UnixTimeSecond `json:"time_point"`
-  Id        string                   `json:"id"`
+func NewDelayTask(d *Delay) scheduler.Task {
+  return append([]byte{flag.Delay}, d.ToBytes()...)
 }
 
 func (d *Delay) Run(ctx context.Context, schedulerTime scheduler.UnixTimeSecond) {
   ctx, logger := log.WithCtx(ctx)
   logger.PushPrefix(fmt.Sprintf("run delay. id=%s, timepoint=%d", d.Id, d.TimePoint))
 
-  req := &callback{
+  req := &callback.Request{
     TimePoint: d.TimePoint,
     Id:        d.Id,
   }
 
-  ok := task.Callback(ctx, confValue.CallbackUrl, req)
+  ok := callback.Callback(ctx, confValue.CallbackUrl, req)
   if ok {
     return
   }
 
   // retry, 超过最大重试时间，直接放弃
-  if int(d.TryCount) >= len(task.ReTryDuration)-1 {
+  if int(d.TryCount) >= len(callback.ReTryDuration)-1 {
     return
   }
 
   tc := d.TryCount + 1
   // 从当前时间计算下次重试的时间
-  next := scheduler.UnixTimeSecond(time.Now().Unix()) + task.ReTryDuration[tc]
+  next := scheduler.UnixTimeSecond(time.Now().Unix()) + callback.ReTryDuration[tc]
   newD := &Delay{
     TryCount:  tc,
     Id:        d.Id,
     TimePoint: d.TimePoint,
   }
-  scheduler.AddTask(next, []scheduler.Task{task.NewDelayTask(newD)})
+  scheduler.AddTask(next, []scheduler.Task{NewDelayTask(newD)})
 }
 
 func (d *Delay) ToBytes() []byte {

@@ -7,7 +7,8 @@ import (
   "github.com/robfig/cron/v3"
   "github.com/xpwu/go-log/log"
   "github.com/xpwu/timer/scheduler"
-  "github.com/xpwu/timer/task"
+  "github.com/xpwu/timer/task/callback"
+  "github.com/xpwu/timer/task/flag"
   "time"
 )
 
@@ -18,9 +19,8 @@ type Fixed struct {
   OpFlag    string                   `json:"op"`
 }
 
-type callback struct {
-  TimePoint scheduler.UnixTimeSecond `json:"time_point"`
-  Id        string                   `json:"id"`
+func NewFixedTask(f *Fixed) scheduler.Task {
+  return append([]byte{flag.Fixed}, f.ToBytes()...)
 }
 
 func (f *Fixed) Run(ctx context.Context, schedulerTime scheduler.UnixTimeSecond) {
@@ -44,35 +44,35 @@ func (f *Fixed) Run(ctx context.Context, schedulerTime scheduler.UnixTimeSecond)
       TimePoint: next,
       OpFlag:    f.OpFlag,
     }
-    tk := task.NewFixedTask(fixed)
+    tk := NewFixedTask(fixed)
     scheduler.AddTask(next, []scheduler.Task{tk})
   }
 
-  req := &callback{
+  req := &callback.Request{
     TimePoint: f.TimePoint,
     Id:        f.Id,
   }
 
-  ok = task.Callback(ctx, confValue.CallbackUrl, req)
+  ok = callback.Callback(ctx, confValue.CallbackUrl, req)
   if ok {
     return
   }
 
   // retry, 超过最大重试时间，直接放弃
-  if int(f.TryCount) >= len(task.ReTryDuration)-1 {
+  if int(f.TryCount) >= len(callback.ReTryDuration)-1 {
     return
   }
 
   tc := f.TryCount + 1
   // 从当前时间计算下次重试的时间
-  next := scheduler.UnixTimeSecond(time.Now().Unix()) + task.ReTryDuration[tc]
+  next := scheduler.UnixTimeSecond(time.Now().Unix()) + callback.ReTryDuration[tc]
   newF := &Fixed{
     TryCount:  tc,
     Id:        f.Id,
     TimePoint: f.TimePoint,
     OpFlag:    f.OpFlag,
   }
-  scheduler.AddTask(next, []scheduler.Task{task.NewFixedTask(newF)})
+  scheduler.AddTask(next, []scheduler.Task{NewFixedTask(newF)})
 }
 
 func (f *Fixed) ToBytes() []byte {

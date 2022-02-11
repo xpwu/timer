@@ -6,7 +6,6 @@ import (
   "github.com/xpwu/go-log/log"
   "github.com/xpwu/go-reqid/reqid"
   "github.com/xpwu/timer/scheduler"
-  "github.com/xpwu/timer/task"
   "time"
 )
 
@@ -65,7 +64,7 @@ func Add(ctx context.Context, id string, cronTimeStr string, start scheduler.Uni
     TimePoint: next,
     OpFlag:    opFlag,
   }
-  tk := task.NewFixedTask(fixed)
+  tk := NewFixedTask(fixed)
 
   // 先添加scheduler, scheduler重复添加也没关系，在runner的时候做最终的检测
   scheduler.AddTask(next, []scheduler.Task{tk})

@@ -1,4 +1,4 @@
-package task
+package callback
 
 import (
   "context"
@@ -10,6 +10,11 @@ import (
   "path"
   "strings"
 )
+
+type Request struct {
+  TimePoint scheduler.UnixTimeSecond `json:"time_point"`
+  Id        string                   `json:"id"`
+}
 
 func Callback(ctx context.Context, url string, data interface{}) (ok bool) {
   ctx, logger := log.WithCtx(ctx)

@@ -3,7 +3,6 @@ package delay
 import (
   "context"
   "github.com/xpwu/timer/scheduler"
-  "github.com/xpwu/timer/task"
   "time"
 )
 
@@ -15,5 +14,5 @@ func Add(ctx context.Context, id string, d time.Duration) {
     TimePoint: t,
   }
 
-  scheduler.AddTask(t, []scheduler.Task{task.NewDelayTask(delay)})
+  scheduler.AddTask(t, []scheduler.Task{NewDelayTask(delay)})
 }
