@@ -14,7 +14,7 @@ type noResponse struct {
 
 }
 
-func init() {
+func AddAPI() {
   api.Add(func() api.Suite {
     return &suite{}
   })

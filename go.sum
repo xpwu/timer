@@ -25,6 +25,8 @@ github.com/syndtr/goleveldb v1.0.0/go.mod h1:ZVVdQEZoIme9iO1Ch2Jdy24qqXrMMOU6lpP
 github.com/xpwu/go-cmd v0.0.0-20220120085450-0e19f81d7237/go.mod h1:hlID1UUINRJXJSSf1nAsPfLJbSNafd82ouYs0gxvsgM=
 github.com/xpwu/go-cmd v0.0.0-20220120102800-bde0777fdf99 h1:XDavYOLFtMe6/QJeG2EMuj4F/vXDSFc+DvsUA4f8MN0=
 github.com/xpwu/go-cmd v0.0.0-20220120102800-bde0777fdf99/go.mod h1:hlID1UUINRJXJSSf1nAsPfLJbSNafd82ouYs0gxvsgM=
+github.com/xpwu/go-cmd v0.0.0-20220210070727-ca5bec5c9e45 h1:HsJz0FgCh2DOBluvU7P6HmJ5tuM19OONIflAS69zPnI=
+github.com/xpwu/go-cmd v0.0.0-20220210070727-ca5bec5c9e45/go.mod h1:9wb9TDqTcFZsGQlipv28x86gjL0W3HSxLDFr9CHggZA=
 github.com/xpwu/go-config v0.0.0-20220120022145-665ba74379f3/go.mod h1:WcIGlQK06FsHcu0NeuQ7bB8bZFkeVvPGwrcKI2aMaFc=
 github.com/xpwu/go-config v0.0.0-20220121153622-7b6f40653b1b/go.mod h1:WcIGlQK06FsHcu0NeuQ7bB8bZFkeVvPGwrcKI2aMaFc=
 github.com/xpwu/go-config v0.0.0-20220123075748-0f7851f28163 h1:dD92GR2Kqq6vB3D2QQZlczO9SwYVuXSVTd2UHqLbiUY=
