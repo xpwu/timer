@@ -2,12 +2,29 @@ package scheduler
 
 import (
   "context"
+  "encoding/hex"
   "fmt"
   "github.com/xpwu/go-log/log"
   "time"
 )
 
 type Task []byte
+
+func MergeTasks(ones, others []Task) []Task {
+  // task 内容完全相同的，认为是相同的task
+  ret := ones
+  m := make(map[string]bool)
+  for _,t := range ones {
+    m[hex.EncodeToString(t)] = true
+  }
+  for _,t := range others {
+    if !m[hex.EncodeToString(t)] {
+      ret = append(ret, t)
+    }
+  }
+
+  return ret
+}
 
 type tsTask struct {
   ts   UnixTimeSecond
