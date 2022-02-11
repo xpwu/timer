@@ -50,8 +50,8 @@ type overD struct {
   tasks   []Task
 }
 
-func StartAndBlock(down chan<- struct{}) {
-  start(context.Background(), down)
+func Start(down chan<- struct{}) {
+  go start(context.Background(), down)
 }
 
 func start(ctx context.Context, down chan<- struct{}) {
