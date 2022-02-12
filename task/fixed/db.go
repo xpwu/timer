@@ -21,6 +21,13 @@ type DB interface {
   Exist(ids []string) (notExist []string)
   Del(id string)
   Get(id string) (cronTime []byte, opFlag string, ok bool)
+
+  Visit(startId string) (items []struct {
+    Id       string
+    CronTime []byte
+    OpFlag   string
+  },
+    nextId string)
 }
 
 type noopDB struct {
@@ -40,6 +47,21 @@ func (n *noopDB) Del(id string) {
 
 func (n *noopDB) Get(id string) (cronTime []byte, opFlag string, ok bool) {
   return nil, "", false
+}
+
+func (n *noopDB) Visit(startId string) (
+  items []struct {
+  Id       string
+  CronTime []byte
+  OpFlag   string
+},
+  nextId string) {
+
+  return []struct {
+    Id       string
+    CronTime []byte
+    OpFlag   string
+  }{}, ""
 }
 
 var db DB = &noopDB{}

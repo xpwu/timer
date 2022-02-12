@@ -55,7 +55,7 @@ func Add(ctx context.Context, id string, cronTimeStr string, start scheduler.Uni
     return InternalError
   }
 
-  cronTime := NewCronTimeFromSpec(spec, start)
+  cronTime := NewCronTimeFromSpec(spec, start, cronTimeStr)
   opFlag := reqid.RandomID()
   next := scheduler.UnixTimeSecond(cronTime.Next(time.Unix(int64(start), 0)).Unix())
   fixed := &Fixed{
@@ -78,4 +78,28 @@ func Del(id string) {
 
 func Exist(ids []string) (notExist []string) {
   return db.Exist(ids)
+}
+
+type VisitItem struct {
+  Id          string
+  CronTimeStr string
+  Start       scheduler.UnixTimeSecond
+}
+
+
+func Visit(startId string) (items []VisitItem, nextId string) {
+  its, nextId := db.Visit(startId)
+  items = make([]VisitItem, 0, len(its))
+
+  for _, it := range its {
+    cronT := NewCronTimeFromBytes(it.CronTime)
+
+    items = append(items, VisitItem{
+      Id:          it.Id,
+      CronTimeStr: cronT.RawString,
+      Start:       cronT.StartTime,
+    })
+  }
+
+  return
 }

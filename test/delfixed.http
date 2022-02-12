@@ -1,0 +1,7 @@
+
+POST http://localhost:8000/api/delFixed
+Content-Type: application/json
+
+{
+  "ids": ["5-test"]
+}

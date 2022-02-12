@@ -3,6 +3,7 @@ package leveldb
 import (
   "github.com/syndtr/goleveldb/leveldb"
   "github.com/syndtr/goleveldb/leveldb/opt"
+  "github.com/syndtr/goleveldb/leveldb/util"
   "github.com/xpwu/go-log/log"
   "github.com/xpwu/timer/task/fixed"
   "path"
@@ -76,7 +77,7 @@ func (f *fixedDB) Add(id string, cronTime []byte, opFlag string) (ret fixed.AddS
 
 func (f *fixedDB) Exist(ids []string) (notExist []string) {
   ret := make([]string, len(ids))
-  for _,s := range ids {
+  for _, s := range ids {
     if !must(f.db.Has([]byte(s), nil)).(bool) {
       ret = append(ret, s)
     }
@@ -100,4 +101,49 @@ func (f *fixedDB) Get(id string) (cronTime []byte, opFlag string, ok bool) {
   c, o := valueToFixed(v)
 
   return c, o, true
+}
+
+func (f *fixedDB) Visit(startId string) (
+  items []struct {
+  Id       string
+  CronTime []byte
+  OpFlag   string
+},
+  nextId string) {
+
+  iter := f.db.NewIterator(&util.Range{
+    Start: []byte(startId),
+    Limit: nil,
+  }, nil)
+
+  // [startId, ...), len < 1000
+  var sum int = 1000
+
+  items = make([]struct {
+    Id       string
+    CronTime []byte
+    OpFlag   string
+  }, 0, sum)
+
+  for iter.Next() && sum >= 0 {
+    id := string(iter.Key())
+    sum--
+
+    c, o := valueToFixed(iter.Value())
+    items = append(items, struct {
+      Id       string
+      CronTime []byte
+      OpFlag   string
+    }{Id: id, CronTime: c, OpFlag: o})
+  }
+
+  if sum < 0 {
+    // 把最后一个作为下一次的起点，本次不返回最后一个
+    nextId = items[len(items)-1].Id
+    items = items[:len(items)-1]
+  } else {
+    nextId = ""
+  }
+
+  return
 }

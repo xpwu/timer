@@ -32,7 +32,7 @@ func NewFixedTask(f *Fixed) scheduler.Task {
 是一样的，在合并task时，最终会变成只有一个task。中间多执行的t2 t3 t4 通过回调方的幂等而过滤(因为重试机制，回调方必须实现
 幂等)。//todo 后续可以考虑尽可能少的出现重复执行的时间点
 
- */
+*/
 
 func (f *Fixed) Run(ctx context.Context, schedulerTime scheduler.UnixTimeSecond) {
   ctx, logger := log.WithCtx(ctx)
@@ -46,6 +46,7 @@ func (f *Fixed) Run(ctx context.Context, schedulerTime scheduler.UnixTimeSecond)
   cronTimeB, opF, ok := db.Get(f.Id)
   // 已经删除或者OpFlag不相同的task都不真正的执行
   if !ok || opF != f.OpFlag {
+    logger.Info("not run because of being deleted")
     return
   }
 
@@ -112,13 +113,15 @@ type CronTime struct {
   // json:"Location" 覆盖嵌套的 Location 域
   LocationStr string `json:"Location"`
   StartTime   scheduler.UnixTimeSecond
+  RawString   string `json:"raw"`
 }
 
-func NewCronTimeFromSpec(s *cron.SpecSchedule, start scheduler.UnixTimeSecond) *CronTime {
+func NewCronTimeFromSpec(s *cron.SpecSchedule, start scheduler.UnixTimeSecond, rawString string) *CronTime {
   return &CronTime{
     SpecSchedule: *s,
     LocationStr:  s.Location.String(),
     StartTime:    start,
+    RawString:    rawString,
   }
 }
 
