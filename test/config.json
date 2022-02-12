@@ -1,0 +1,33 @@
+{
+	"github.com/xpwu/go-log/log:config": {
+		"// level": "0:DEBUG; 1:INFO; 2:WARNING; 3:ERROR; 4:FATAL",
+		"level": 0
+	},
+	"github.com/xpwu/go-tinyserver/http:serverConfig": {
+		"Net": {
+			"// Listen": "1、xxx.xxx.xxx.xxx:[0-9] 2、:[0-9] 3、pipe:[0-9] 4、unix:|xxx|xxx|xxx|xxx.socket:0",
+			"Listen": ":8000",
+			"// MaxConnections": "-1:not limit",
+			"MaxConnections": -1,
+			"TLS": false,
+			"TlsFile": {
+				"// PrivateKeyPEMFile": "support relative path, must PEM encode data",
+				"PrivateKeyPEMFile": "",
+				"// CertPEMFile": "support relative path, must PEM encode data",
+				"CertPEMFile": ""
+			}
+		},
+		"// HostName": "leftmost match, []: allow all host name",
+		"HostName": [],
+		"// RootUri": "match_uri = RootUri + api.RegisterUri",
+		"RootUri": "/api"
+	},
+	"github.com/xpwu/timer/task/fixed:config": {
+		"// url": "callback url",
+		"url": "http://localhost:8000/api/test/fixed"
+	},
+	"github.com/xpwu/timer/task/delay:config": {
+		"// url": "callback url",
+		"url": "http://localhost:8000/api/test/delay"
+	}
+}
