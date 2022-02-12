@@ -23,9 +23,25 @@ func NewFixedTask(f *Fixed) scheduler.Task {
   return append([]byte{flag.Fixed}, f.ToBytes()...)
 }
 
+/**
+
+可能的情况分析：
+1、id1的fixed 执行时间点依次为 t1 t2 t3 t4 t5 ... ，t1时运行Run(), Run()中添加时间点为t2的任务，但是scheduler在
+删除t1时，出现异常，则scheduler中同时存在id1的时间点为t1与t2的两个任务。
+分析：异常恢复后，可能会同时执行t1与t2，t2可能会连续执行到t5，t1会再次生成t2 t3 t4 t5的任务，但是t1生成的t5与t2生成的t5
+是一样的，在合并task时，最终会变成只有一个task。中间多执行的t2 t3 t4 通过回调方的幂等而过滤(因为重试机制，回调方必须实现
+幂等)。//todo 后续可以考虑尽可能少的出现重复执行的时间点
+
+ */
+
 func (f *Fixed) Run(ctx context.Context, schedulerTime scheduler.UnixTimeSecond) {
   ctx, logger := log.WithCtx(ctx)
   logger.PushPrefix(fmt.Sprintf("run fixed. id=%s, timepoint=%d", f.Id, f.TimePoint))
+
+  logger.Debug("start")
+  defer func() {
+    logger.Info("end")
+  }()
 
   cronTimeB, opF, ok := db.Get(f.Id)
   // 已经删除或者OpFlag不相同的task都不真正的执行
@@ -73,6 +89,7 @@ func (f *Fixed) Run(ctx context.Context, schedulerTime scheduler.UnixTimeSecond)
     OpFlag:    f.OpFlag,
   }
   scheduler.AddTask(next, []scheduler.Task{NewFixedTask(newF)})
+
 }
 
 func (f *Fixed) ToBytes() []byte {
