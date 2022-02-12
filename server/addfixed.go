@@ -20,6 +20,7 @@ Id 不能为空字符串
 type addFixedRequest struct {
   // unit: s; 0:从收到请求开始算
   StartTime scheduler.UnixTimeSecond `json:"start"`
+  // * * * * *  (linux crontab)
   CronTime  string                   `json:"cron"`
   Id        string                   `json:"id"`
 }

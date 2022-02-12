@@ -37,6 +37,7 @@ func (d *Delay) Run(ctx context.Context, schedulerTime scheduler.UnixTimeSecond)
 
   // retry, 超过最大重试时间，直接放弃
   if int(d.TryCount) >= len(callback.ReTryDuration)-1 {
+    logger.Warning("discard because of exceeding max retries(~20day)")
     return
   }
 
