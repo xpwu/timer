@@ -3,6 +3,7 @@ package server
 import (
   "context"
   "github.com/syndtr/goleveldb/leveldb/errors"
+  "github.com/xpwu/go-log/log"
   "github.com/xpwu/timer/scheduler"
   "github.com/xpwu/timer/task/fixed"
   "time"
@@ -12,6 +13,8 @@ import (
 1、所有数据都相同的重复添加，不会对系统有任何的状态改变，并不会从StartTime重新执行此任务，并且返回OK
 2、任何新添加的任务(此次添加前系统中不存在)，都是从StartTime开始执行此任务，返回OK
 3、Id相同，但是其他数据不同的任务，添加失败，返回IdConflict
+
+Id 不能为空字符串
  */
 
 type addFixedRequest struct {
@@ -33,7 +36,12 @@ type addFixedResponse struct {
 }
 
 func (s *suite) APIAddFixed(ctx context.Context, request *addFixedRequest) *addFixedResponse {
-  //ctx, logger := log.WithCtx(ctx)
+  ctx, logger := log.WithCtx(ctx)
+
+  if request.Id == "" {
+    logger.Error("Id is empty")
+    s.Req.Terminate(errors.New("Id is empty"))
+  }
 
   res := &addFixedResponse{Status: OK}
 
