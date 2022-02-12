@@ -8,7 +8,7 @@ require (
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/xpwu/go-cmd v0.0.0-20220210070727-ca5bec5c9e45
 	github.com/xpwu/go-config v0.0.0-20220211175849-2ba23035fa38
-	github.com/xpwu/go-httpclient v0.0.0-20220121160550-a00953ba3a2e
+	github.com/xpwu/go-httpclient v0.0.0-20220212065417-ce9c19c7a4a8
 	github.com/xpwu/go-log v0.0.0-20220210151813-00e3758e787f
 	github.com/xpwu/go-reqid v0.0.0-20220121111345-9dac6c8cd03c
 	github.com/xpwu/go-tinyserver v0.0.0-20220212050627-e83321c04de2
