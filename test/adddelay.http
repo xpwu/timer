@@ -1,0 +1,26 @@
+POST http://localhost:8000/api/addDelay
+Content-Type: application/json
+
+{
+  "d": 10,
+  "id": "2-test"
+}
+
+###
+POST http://localhost:8000/api/addDelay
+Content-Type: application/json
+
+{
+  "d": 5,
+  "id": "1-test"
+}
+
+###
+
+POST http://localhost:8000/api/addDelay
+Content-Type: application/json
+
+{
+  "d": 0,
+  "id": "0-test"
+}

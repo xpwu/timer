@@ -1,0 +1,12 @@
+
+POST http://localhost:8000/api/addFixed
+Content-Type: application/json
+
+{
+  "start": 0,
+  "id": "2-test",
+  "cron": "0 * * * *"
+}
+
+###
+
