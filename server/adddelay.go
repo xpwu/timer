@@ -2,6 +2,7 @@ package server
 
 import (
   "context"
+  "github.com/xpwu/go-tinyserver/api"
   "github.com/xpwu/timer/task/delay"
   "time"
 )
@@ -12,9 +13,9 @@ type addDelayRequest struct {
   Id       string        `json:"id"`
 }
 
-func (s *suite) APIAddDelay(ctx context.Context, request *addDelayRequest) *noResponse {
+func (s *suite) APIAddDelay(ctx context.Context, request *addDelayRequest) *api.EmptyResponse {
 
   delay.Add(ctx, request.Id, request.Duration*time.Second)
 
-  return &noResponse{}
+  return &api.EmptyResponse{}
 }

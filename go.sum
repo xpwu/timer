@@ -43,6 +43,8 @@ github.com/xpwu/go-reqid v0.0.0-20220121111345-9dac6c8cd03c h1:QFtpXTpTS8HHSPyV1
 github.com/xpwu/go-reqid v0.0.0-20220121111345-9dac6c8cd03c/go.mod h1:VG6DraZK8fsAMskvr95aCYppalDEcKO4NnyNz6W8vO4=
 github.com/xpwu/go-tinyserver v0.0.0-20220211181921-f977ae7640ba h1:DeqbU0E+xIlEw3D7reKZceR5TYl1+5VqJ4LqTEzfAxE=
 github.com/xpwu/go-tinyserver v0.0.0-20220211181921-f977ae7640ba/go.mod h1:SSsVToufrui9YqrpY4/jYcZg5RS8rlCMbqpp9Y8f/Bg=
+github.com/xpwu/go-tinyserver v0.0.0-20220212050627-e83321c04de2 h1:vVOf8HiE+/jaogrYTQmrkByMe/9KJNsmryJLKtexlhg=
+github.com/xpwu/go-tinyserver v0.0.0-20220212050627-e83321c04de2/go.mod h1:SSsVToufrui9YqrpY4/jYcZg5RS8rlCMbqpp9Y8f/Bg=
 github.com/xpwu/go-x v0.0.0-20220120021151-4ac8ee529bca/go.mod h1:fbWlT5O1aPLdzOhKnkPFao9E3q5LjQY3GXFnzML6Xz4=
 github.com/xpwu/go-x v0.0.0-20220123075150-a3b3e80eea7e/go.mod h1:fbWlT5O1aPLdzOhKnkPFao9E3q5LjQY3GXFnzML6Xz4=
 github.com/xpwu/go-x v0.0.0-20220124144953-4f839dd5ea5a h1:gG4UbmXmOnrK1AzrY/e6Eof5TpMGIkDgq5wCDNIzOeM=

@@ -10,10 +10,6 @@ type suite struct {
   api.RootURIMapper
 }
 
-type noResponse struct {
-
-}
-
 func AddAPI() {
   api.Add(func() api.Suite {
     return &suite{}
