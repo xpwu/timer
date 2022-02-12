@@ -57,7 +57,7 @@ func (r *runner) Run(ctx context.Context, schedulerTime scheduler.UnixTimeSecond
   }
 }
 
-func init() {
+func InitRunner() {
   scheduler.SetRunner(&runner{})
 }
 

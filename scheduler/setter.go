@@ -1,6 +1,9 @@
 package scheduler
 
-import "context"
+import (
+  "context"
+  "github.com/xpwu/go-log/log"
+)
 
 var (
 	runner Runner = &noopRunner{}
@@ -10,6 +13,8 @@ var (
 type noopRunner struct {}
 
 func (n *noopRunner) Run(ctx context.Context, schedulerTime UnixTimeSecond, tasks []Task) {
+  _,logger := log.WithCtx(ctx)
+  logger.Warning("no runner")
 }
 
 func SetRunner(r Runner) {

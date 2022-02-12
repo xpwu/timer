@@ -117,7 +117,7 @@ func start(ctx context.Context, down chan<- struct{}) {
       }
 
       running[tasks.TimeStamp()] = true
-      go func() {
+      go func(ts UnixTimeSecond, tks []Task) {
         ctx, logger := log.WithCtx(ctx)
         logger.PushPrefix("runner")
         crashed := false
@@ -128,14 +128,14 @@ func start(ctx context.Context, down chan<- struct{}) {
             crashed = true
           }
           over <- overD{
-            ts:      tasks.TimeStamp(),
+            ts:      ts,
             crashed: crashed,
-            tasks:   tasks.Tasks(),
+            tasks:   tks,
           }
         }()
 
-        getRunner().Run(ctx, tasks.TimeStamp(), tasks.Tasks())
-      }()
+        getRunner().Run(ctx, ts, tks)
+      }(tasks.TimeStamp(), tasks.Tasks())
     }
     tasks.Release()
 
