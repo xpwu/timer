@@ -4,19 +4,20 @@ Content-Type: application/json
 
 {
   "start": 0,
-  "id": "6-test",
-  "cron": "* * * * *"
+  "id": "1-test",
+  "cron": "25 * * * *"
 }
 
 ###
+
 
 POST http://localhost:8000/api/addFixed
 Content-Type: application/json
 
 {
   "start": 0,
-  "id": "1-test",
-  "cron": "25 * * * *"
+  "id": "2-test",
+  "cron": "* 13 * * *"
 }
 
 ###
@@ -49,6 +50,18 @@ Content-Type: application/json
 {
   "start": 0,
   "id": "5-test",
+  "cron": "* * * * *"
+}
+
+###
+
+
+POST http://localhost:8000/api/addFixed
+Content-Type: application/json
+
+{
+  "start": 0,
+  "id": "6-test",
   "cron": "* * * * *"
 }
 

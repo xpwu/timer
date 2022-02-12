@@ -3,5 +3,14 @@ POST http://localhost:8000/api/delFixed
 Content-Type: application/json
 
 {
-  "ids": ["5-test"]
+  "ids": ["1-test", "2-test", "3-test", "4-test", "5-test", "6-test"]
+}
+
+###
+
+POST http://localhost:8000/api/delFixed
+Content-Type: application/json
+
+{
+  "ids": ["4-test"]
 }
