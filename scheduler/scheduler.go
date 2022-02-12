@@ -50,8 +50,19 @@ type overD struct {
   tasks   []Task
 }
 
-func Start(down chan<- struct{}) {
-  go start(context.Background(), down)
+func Start() {
+  go func() {
+    down := make(chan struct{}, 1)
+
+    for {
+      start(context.Background(), down)
+
+      select {
+      case <-down:
+        time.Sleep(5 * time.Second)
+      }
+    }
+  }()
 }
 
 func start(ctx context.Context, down chan<- struct{}) {

@@ -11,7 +11,6 @@ import (
   "github.com/xpwu/timer/scheduler"
   "github.com/xpwu/timer/server"
   "path/filepath"
-  "time"
 )
 
 func main() {
@@ -30,19 +29,14 @@ func main() {
     root := exe.Exe.AbsDir
     leveldb.Init(root)
 
-    down := make(chan struct{}, 1)
-    scheduler.Start(down)
+    scheduler.Start()
 
     server.AddAPI()
     http.Start()
 
-    for {
-      select {
-      case <-down:
-        time.Sleep(5 * time.Second)
-        scheduler.Start(down)
-      }
-    }
+    // block
+    block := make(chan struct{})
+    <-block
   })
 
   cmd.Run()
