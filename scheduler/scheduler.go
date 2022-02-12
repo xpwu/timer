@@ -192,6 +192,8 @@ func start(ctx context.Context, down chan<- struct{}) {
           logger.Debug("len(running) < 10, move start time to ", start)
         }
 
+        now = UnixTimeSecond(time.Now().Unix())
+
       case t := <-newTask:
         // drain the channel, find min
         min := t.ts
