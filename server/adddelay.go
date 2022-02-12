@@ -7,6 +7,9 @@ import (
   "time"
 )
 
+/**
+无论系统中是否存在Id任务，都是直接添加进系统中
+ */
 type addDelayRequest struct {
   // unit: s
   Duration time.Duration `json:"d"`

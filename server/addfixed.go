@@ -8,6 +8,12 @@ import (
   "time"
 )
 
+/**
+1、所有数据都相同的重复添加，不会对系统有任何的状态改变，并不会从StartTime重新执行此任务，并且返回OK
+2、任何新添加的任务(此次添加前系统中不存在)，都是从StartTime开始执行此任务，返回OK
+3、Id相同，但是其他数据不同的任务，添加失败，返回IdConflict
+ */
+
 type addFixedRequest struct {
   // unit: s; 0:从收到请求开始算
   StartTime scheduler.UnixTimeSecond `json:"start"`

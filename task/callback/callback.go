@@ -9,12 +9,16 @@ import (
   "net/http"
 )
 
+/**
+1、id为任务添加时的id，透传
+2、回调接收服务器需要满足幂等
+ */
 type Request struct {
   TimePoint scheduler.UnixTimeSecond `json:"time_point"`
   Id        string                   `json:"id"`
 }
 
-func Callback(ctx context.Context, rawUrl httpc.RawURL, data interface{}) (ok bool) {
+func Callback(ctx context.Context, rawUrl httpc.RawURL, data *Request) (ok bool) {
   ctx, logger := log.WithCtx(ctx)
 
   url := rawUrl.String()
