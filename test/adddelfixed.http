@@ -1,0 +1,104 @@
+POST http://localhost:8000/api/delFixed
+Content-Type: application/json
+
+{
+  "ids": ["adddel-test"]
+}
+
+> {%
+  client.test("del1-test", ()=>{
+    client.assert(response.status === 200)
+  })
+ %}
+
+###
+
+POST http://localhost:8000/api/addFixed
+Content-Type: application/json
+
+{
+  "start": 0,
+  "id": "adddel-test",
+  "cron": "* * * * *"
+}
+
+> {%
+client.test("add1-test", ()=>{
+  client.assert(response.status === 200)
+  let res = JSON.parse(response.body)
+  client.assert(res.status === 0)
+})
+ %}
+
+###
+
+POST http://localhost:8000/api/delFixed
+Content-Type: application/json
+
+{
+  "ids": ["adddel-test"]
+}
+
+> {%
+  client.test("del2-test", ()=>{
+    client.assert(response.status === 200)
+  })
+%}
+
+###
+
+POST http://localhost:8000/api/addFixed
+Content-Type: application/json
+
+{
+  "start": 0,
+  "id": "adddel-test",
+  "cron": "* * * * *"
+}
+
+> {%
+  client.test("add2-test", ()=>{
+    client.assert(response.status === 200)
+    let res = JSON.parse(response.body)
+    client.assert(res.status === 0)
+  })
+%}
+
+
+###
+
+
+POST http://localhost:8000/api/delFixed
+Content-Type: application/json
+
+{
+  "ids": ["adddel-test"]
+}
+
+> {%
+  client.test("del3-test", ()=>{
+    client.assert(response.status === 200)
+  })
+%}
+
+###
+
+POST http://localhost:8000/api/addFixed
+Content-Type: application/json
+
+{
+  "start": 0,
+  "id": "adddel-test",
+  "cron": "* * * * *"
+}
+
+> {%
+  client.test("add3-test", ()=>{
+    client.assert(response.status === 200)
+    let res = JSON.parse(response.body)
+    client.assert(res.status === 0)
+  })
+%}
+
+
+###
